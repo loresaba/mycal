@@ -2596,13 +2596,11 @@ void viewAppendTimeSlotRows(View *view) {
         // We are in the current time slot
         if (curr_total_mins >= tslot_start_mins && 
             curr_total_mins <  tslot_end_mins) {
+            strftime(time_str, sizeof(time_str), view->as.act.tfmt, &curr);
             if (m == 0) {
-                strftime(time_str, sizeof(time_str), view->as.act.tfmt, &time);
                 buflen = snprintf(buf, bufsize, "%s +%s+", 
                                   time_str, plus_delims);
             } else {
-                strftime(time_str, sizeof(time_str), 
-                         view->as.act.tfmt, &curr);
                 buflen = snprintf(buf, bufsize, "%s |%s|", 
                                   time_str, pipe_delims);
             }
