@@ -6156,7 +6156,7 @@ int main(int argc, char *argv[]) {
     Mycal.win_width  = ws.ws_col;
     Mycal.win_height = ws.ws_row;
 
-    /* Load database */
+    /* Database */
     char *db_file = "mycal.db";
     if (argi < argc) {
         int file_len = strlen(argv[argi]);
@@ -6164,31 +6164,6 @@ int main(int argc, char *argv[]) {
             db_file = argv[argi++]; // endswith ".db"
     }
     
-    if (!initDB(db_file, &Mycal.db)) {
-        sqlite3_close(Mycal.db);
-        return 1;
-    }
-
-    /* Show day view as default */
-    if (argi == argc) { 
-        View view;
-        initDayView(&view, Mycal.now);
-        populateDayViewRows(&view);
-
-        Renderer r = {
-            .x = -1,
-            .y = -1,
-            .rowoff     = 0,
-            .coloff     = 0,
-            .screenrows = view.nrows,
-            .screencols = Mycal.win_width,
-            .text_align = RENDERER_ALIGN_START,
-        };
-
-        viewRenderRows(&view, &r);
-        freeView(&view);
-    }
-
     /* Parse args.
      *
      * For options like `--del-activity`, `--edit-activity`, we can provide 
@@ -6347,6 +6322,32 @@ int main(int argc, char *argv[]) {
                 argv[0]);
         sqlite3_close(Mycal.db);
         exit(1);
+    }
+
+    /* Load database */
+    if (!initDB(db_file, &Mycal.db)) {
+        sqlite3_close(Mycal.db);
+        return 1;
+    }
+
+    /* Show day view as default */
+    if (argc == argi) { 
+        View view;
+        initDayView(&view, Mycal.now);
+        populateDayViewRows(&view);
+
+        Renderer r = {
+            .x = -1,
+            .y = -1,
+            .rowoff     = 0,
+            .coloff     = 0,
+            .screenrows = view.nrows,
+            .screencols = Mycal.win_width,
+            .text_align = RENDERER_ALIGN_START,
+        };
+
+        viewRenderRows(&view, &r);
+        freeView(&view);
     }
 
     /* Run */
