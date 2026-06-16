@@ -5355,7 +5355,13 @@ mkcat_cnt_input:
             // NONE parent
             else if (parent == NULL || parent->id == CATEGORY_ID_NONE) {
                 parent_id = 0;
-                color = getUnusedColor();
+                if (has_category && orig_cat->parent_id == CATEGORY_ID_NONE)
+                    // We are editing a category and we select NONE as
+                    // parent for both the old and new categories, then
+                    // we keep the original color.
+                    color = orig_cat->color;
+                else 
+                    color = getUnusedColor();
                 parent_name[0] = '\0';
             } 
             // Chosen parent
